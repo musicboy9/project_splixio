@@ -15,6 +15,7 @@
 class Map{
 public:
     Map(float player_r, float player_g, float player_b, float zombie_r, float zombie_g, float zombie_b, int zombieNum);
+	float CalLand(); //Calculate the percentage of my land
     
 private:
     landFlag playerLand[66][66];

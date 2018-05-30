@@ -48,3 +48,19 @@ Map::Map(float player_r, float player_g, float player_b, float zombie_r, float z
         zombies[i] = Zombie(x, y, zombie_r, zombie_g, zombie_b);
     }
 }
+
+float Map::CalLand(){      //Calculate the percentage of my land
+	int playerlandnum;
+	float playerlandper;
+
+	for (i = 0;j<66;i++){
+		for (j = 0; j<66; j++){
+			if (playland[i][j] == 2) ++playerlandnum;
+		}
+
+	}
+
+	playerlandper = playerlandnum / 64 / 64;
+
+	return playerlandper;
+}
