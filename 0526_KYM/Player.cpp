@@ -58,6 +58,12 @@ Player::~Player(){
     }
 }
 
+void Player::setX(int x) {
+    pos[0] = x;
+}
+void Player::setY(int y) {
+    pos[1] = y;
+}
 int Player:: getX() const {
     return pos[0];
 }

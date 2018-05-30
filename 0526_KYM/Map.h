@@ -8,21 +8,35 @@
 
 #include "Player.h"
 #include "Zombie.h"
+#include <vector>
 
 #ifndef Map_h
 #define Map_h
 
+enum gameStatus {
+    gameWin = 2,
+    gaming = 1,
+    gameOver = 0
+};
+
 class Map{
 public:
     Map(float player_r, float player_g, float player_b, float zombie_r, float zombie_g, float zombie_b, int zombieNum);
-	float CalLand(); //Calculate the percentage of my land
-    
+    void update();
+	float percentLand(); //Calculate the percentage of my land
+    gameStatus getStatus();
 private:
+    void playerReset();
+    bool trailCollision(); // true if player or zombie on trail, false if not
+    
     landFlag playerLand[66][66];
     bool playerTrail[66][66];
     int zombieNum;
+    bool trailing;
     Player *player;
-    Zombie *zombies;
+    vector<Zombie> *zombies;
+    
+    gameStatus status;
 };
 
 #endif /* Map_h */

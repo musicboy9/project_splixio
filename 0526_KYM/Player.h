@@ -28,6 +28,8 @@ public:
     Player(int x, int y, float color_r, float color_g, float color_b);
     ~Player();
     
+    void setX(int x);
+    void setY(int y);
     int getX() const;
     int getY() const;
     float getR() const;

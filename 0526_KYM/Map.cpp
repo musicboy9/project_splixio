@@ -17,6 +17,7 @@ Map::Map(float player_r, float player_g, float player_b, float zombie_r, float z
     for (int i=0; i<66; i++){
         for (int j=0; j<66; j++){
             playerLand[i][j] = emptyLand;
+            playerTrail[i][j] = false;
         }
     }
     for (int i=0; i<66; i++){
@@ -31,13 +32,15 @@ Map::Map(float player_r, float player_g, float player_b, float zombie_r, float z
         }
     }
     
-    memset(playerTrail,false,sizeof(playerTrail));
+    trailing = false;
+    status = gaming;
     
     player = new Player;
     *player = Player(32, 32, player_r, player_g, player_b);
+    (*player).setLife(3);
     
     zombieNum = newZombieNum;
-    zombies = new Zombie[zombieNum];
+    zombies = new vector<Zombie>;
     srand((int)time(0));
     for (int i = 0; i < zombieNum; i++){
         int x, y = 0;
@@ -45,22 +48,119 @@ Map::Map(float player_r, float player_g, float player_b, float zombie_r, float z
             x = (rand() % 64) + 1;
             y = (rand() % 64) + 1;
         }
-        zombies[i] = Zombie(x, y, zombie_r, zombie_g, zombie_b);
+        (*zombies).push_back(Zombie(x, y, zombie_r, zombie_g, zombie_b));
     }
 }
 
-float Map::CalLand(){      //Calculate the percentage of my land
-	int playerlandnum;
-	float playerlandper;
-
-	for (i = 0;j<66;i++){
-		for (j = 0; j<66; j++){
-			if (playland[i][j] == 2) ++playerlandnum;
-		}
-
-	}
-
-	playerlandper = playerlandnum / 64 / 64;
-
-	return playerlandper;
+void Map::update(){
+    (*player).update(playerLand);
+    for (int i = 0; i < zombieNum; i++){
+        (*zombies)[i].update(playerLand);
+    }
+    
+    bool temp = (playerLand[(*player).getX()][(*player).getY()]==myLand);
+    
+    if (temp&&(!trailing)){
+        return;
+    } else if (temp&&trailing){
+        /////////// flood fill
+    } else { // temp = false -> not myLand
+        if (!trailing){
+            trailing = true;
+        }
+        playerTrail[(*player).getX()][(*player).getY()] = true;
+    }
+    
+    if ((*this).trailCollision()){
+        (*this).playerReset();
+    }
 }
+
+float Map::percentLand(){      //Calculate the percentage of my land
+	int playerLandNum;
+	float playerLandPercent;
+
+	for (int i = 0; i<66; i++){
+		for (int j = 0; j<66; j++){
+            if (playerLand[i][j] == 2){
+                ++playerLandNum;
+            }
+		}
+	}
+	playerLandPercent = playerLandNum / 64 / 64;
+	return playerLandPercent;
+}
+
+gameStatus Map::getStatus() {
+    return status;
+}
+
+void Map::playerReset(){
+    (*player).setX(32);
+    (*player).setY(32);
+    for (int i = 0; i<66; i++){
+        for (int j = 0; j<66; j++){
+            playerTrail[i][j] = false;
+        }
+    }
+    int tempLife = (*player).getLife();
+    (*player).setLife(tempLife-1);
+    if ((tempLife-1)==0){
+        status = gameOver;
+    }
+}
+
+bool Map::trailCollision(){
+    int playerPos[2];
+    int zombieNum = (*zombies).size();
+    int zombiesPos[zombieNum][2];
+    
+    playerPos[0] = (*player).getX();
+    playerPos[1] = (*player).getY();
+    for (int i = 0; i < zombieNum; i++){
+        zombiesPos[i][0] = (*zombies)[i].getX();
+        zombiesPos[i][1] = (*zombies)[i].getY();
+    }
+    //set player and zombie pos
+    
+    for (int i = 0; i<66; i++){
+        for (int j = 0; j<66; j++){
+            if (playerTrail[i][j] == true){
+                if ((i==playerPos[0])&&(j==playerPos[1])){
+                    return true;
+                }
+                for (int k = 0; k < zombieNum; k++){
+                    if ((zombiesPos[k][0]==i)&&(zombiesPos[k][1]==j)){
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
