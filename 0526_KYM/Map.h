@@ -28,6 +28,8 @@ public:
 private:
     void playerReset();
     bool trailCollision(); // true if player or zombie on trail, false if not
+    void trailToLand();
+    void floodFillLand(bool boolLand[66][66], bool visitLand[66][66], int x, int y);
     
     landFlag playerLand[66][66];
     bool playerTrail[66][66];

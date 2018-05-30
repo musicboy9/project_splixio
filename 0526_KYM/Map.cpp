@@ -63,7 +63,7 @@ void Map::update(){
     if (temp&&(!trailing)){
         return;
     } else if (temp&&trailing){
-        /////////// flood fill
+        (*this).trailToLand();
     } else { // temp = false -> not myLand
         if (!trailing){
             trailing = true;
@@ -74,6 +74,9 @@ void Map::update(){
     if ((*this).trailCollision()){
         (*this).playerReset();
     }
+    if((*this).percentLand()>=0.7){
+        status = gameWin;
+    } //////////////main should check the status after update
 }
 
 float Map::percentLand(){      //Calculate the percentage of my land
@@ -140,7 +143,48 @@ bool Map::trailCollision(){
     return false;
 }
 
+void Map::trailToLand(){
+    bool tempLand[66][66];
+    for (int i = 0; i<66; i++){
+        for (int j = 0; j<66; j++){
+            if ((playerTrail[i][j])||(playerLand[i][j]==myLand)){
+                tempLand[i][j] = true;
+            } else {
+                tempLand[i][j] = false;
+            }
+        }
+    }
+    bool visitLand[66][66] = {false};
+    (*this).floodFillLand(tempLand, visitLand, 0, 0);
+    for (int i = 0; i<66; i++){
+        for (int j = 0; j<66; j++){
+            if(!visitLand[i][j]){
+                playerLand[i][j] = myLand;
+            }
+        }
+    }
+}
 
+void Map::floodFillLand(bool boolLand[66][66], bool visitLand[66][66], int x, int y){
+    if (visitLand[x][y] == true){
+        return;
+    }
+    if ((x<0)||(y<0)||(x>65)||(y>65)){
+        return;
+    }
+    if (boolLand[x][y] == true){
+        return;
+    }
+    visitLand[x][y] = true;
+    (*this).floodFillLand(boolLand, visitLand, x-1, y);
+    (*this).floodFillLand(boolLand, visitLand, x-1, y-1);
+    (*this).floodFillLand(boolLand, visitLand, x, y-1);
+    (*this).floodFillLand(boolLand, visitLand, x+1, y-1);
+    (*this).floodFillLand(boolLand, visitLand, x+1, y);
+    (*this).floodFillLand(boolLand, visitLand, x+1, y+1);
+    (*this).floodFillLand(boolLand, visitLand, x, y+1);
+    (*this).floodFillLand(boolLand, visitLand, x-1, y+1);
+}
 
 
 
