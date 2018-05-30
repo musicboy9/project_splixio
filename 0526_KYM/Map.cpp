@@ -163,6 +163,12 @@ void Map::trailToLand(){
             }
         }
     }
+    for (int i = 0; i<(*zombies).size(); i++){
+        if(playerLand[(*zombies)[i].getX()][(*zombies)[i].getY()]==myLand){
+            delete &(*zombies)[i];
+            (*zombies).erase((*zombies).begin()+i);
+        }
+    }//kill zombies inside myLand
 }
 
 void Map::floodFillLand(bool boolLand[66][66], bool visitLand[66][66], int x, int y){
