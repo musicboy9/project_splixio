@@ -7,6 +7,20 @@
 //
 
 #include <iostream>
+#include <vector>
+#include "Square.h"
+#include "Map.h"
+#include "OpenGL/OpenGL.h"
+#include "GLUT/GLUT.h"
+
+void init(){
+    vector<Square> squares;
+    
+    for(int i=0;i<64;i++){
+        Square temp_sq = Square(float x, float y, float r, float g, float b, float sz)/////////////////
+        squares.push_back(square);
+    }
+}
 
 int main(int argc, const char * argv[]) {
     // insert code here...
