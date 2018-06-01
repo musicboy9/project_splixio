@@ -7,7 +7,10 @@
 //
 
 #include <stdio.h>
+#include <iostream>
 #include "Player.h"
+
+using namespace std;
 
 Player::Player(){
     pos = new int[2];
@@ -58,13 +61,37 @@ Player::~Player(){
     }
 }
 
+Player::Player(const Player& temp_player){
+    pos = new int[2];
+    color = new float[3];
+    
+    pos[0] = temp_player.pos[0];
+    pos[1] = temp_player.pos[1];
+    color[0] = temp_player.color[0];
+    color[1] = temp_player.color[1];
+    color[2] = temp_player.color[2];
+}
+
+Player& Player::operator=(const Player &temp_player){
+    pos = new int[2];
+    color = new float[3];
+    
+    pos[0] = temp_player.pos[0];
+    pos[1] = temp_player.pos[1];
+    color[0] = temp_player.color[0];
+    color[1] = temp_player.color[1];
+    color[2] = temp_player.color[2];
+    
+    return (*this);
+}
+
 void Player::setX(int x) {
     pos[0] = x;
 }
 void Player::setY(int y) {
     pos[1] = y;
 }
-int Player:: getX() const {
+int Player::getX() const {
     return pos[0];
 }
 int Player::getY() const {
@@ -96,6 +123,7 @@ void Player::setLife(int newLife){
 }
 
 void Player::update(landFlag currentMap[66][66]) const{
+    //cout<<*direction<<endl;
     switch(*direction){
         case STOP:
             return;

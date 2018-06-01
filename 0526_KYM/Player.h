@@ -23,6 +23,8 @@ public:
     Player();
     Player(int x, int y, float color_r, float color_g, float color_b);
     ~Player();
+    Player(const Player& temp_player);
+    Player& operator=(const Player& temp_player);
     
     void setX(int x);
     void setY(int y);

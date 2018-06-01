@@ -40,6 +40,36 @@ Zombie::~Zombie(){
     }
 }
 
+Zombie::Zombie(const Zombie& temp_zom){
+    pos = new int[2];
+    pos[0] = temp_zom.pos[0];
+    pos[1] = temp_zom.pos[1];
+    
+    color = new float[3];
+    color[0] = temp_zom.color[0];
+    color[1] = temp_zom.color[1];
+    color[2] = temp_zom.color[2];
+}
+
+Zombie& Zombie::operator=(const Zombie& temp_zom){
+    if (pos != nullptr){
+        delete [] pos;
+    }
+    if (color != nullptr){
+        delete [] color;
+    }
+    pos = new int[2];
+    pos[0] = temp_zom.pos[0];
+    pos[1] = temp_zom.pos[1];
+    
+    color = new float[3];
+    color[0] = temp_zom.color[0];
+    color[1] = temp_zom.color[1];
+    color[2] = temp_zom.color[2];
+    
+    return (*this);
+}
+
 int Zombie::getX() const {
     return pos[0];
 }

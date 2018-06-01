@@ -22,7 +22,7 @@ enum gameStatus {
 class Map{
 public:
     Map(float player_r, float player_g, float player_b, float zombie_r, float zombie_g, float zombie_b, int zombieNum);
-    void update();
+    void update(playerDirection newDirection);
 	float percentLand(); //Calculate the percentage of my land
     landFlag getLandFlag(int x, int y);
     gameStatus getStatus();
@@ -34,12 +34,12 @@ private:
     
     landFlag totalLand[66][66];
     landFlag playerLand[66][66];
-    bool playerTrail[66][66];
+    vector<vector<int>> playerTrail;
     int zombieNum;
     bool trailing;
     Player *player;
     vector<Zombie> *zombies;
-    
+    playerDirection currentDir;
     gameStatus status;
 };
 

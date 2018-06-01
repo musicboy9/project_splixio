@@ -19,6 +19,8 @@ public:
     Zombie();
     Zombie(int x, int y, float color_r, float color_g, float color_b);
     ~Zombie();
+    Zombie(const Zombie& temp_zom);
+    Zombie& operator=(const Zombie& temp_zom);
     
     int getX() const;
     int getY() const;

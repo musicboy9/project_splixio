@@ -12,17 +12,20 @@
 #include <stdlib.h>
 #include <time.h>
 
+using namespace std;
+
 Map::Map(float player_r, float player_g, float player_b, float zombie_r, float zombie_g, float zombie_b, int newZombieNum){
     
+    for (int i=1; i<65; i++){
+        for (int j=1; j<65; j++){
+            playerLand[i][j] = emptyLand;
+        }
+    }
     for (int i=0; i<66; i++){
         playerLand[0][i] = boundary;
         playerLand[65][i] = boundary;
         playerLand[i][0] = boundary;
         playerLand[i][65] = boundary;
-        for (int j=0; j<66; j++){
-            playerLand[i][j] = emptyLand;
-            playerTrail[i][j] = false;
-        }
     }
     
     for (int j=31; j<34; j++){
@@ -33,6 +36,7 @@ Map::Map(float player_r, float player_g, float player_b, float zombie_r, float z
     
     trailing = false;
     status = gaming;
+    currentDir = STOP;
     
     player = new Player;
     *player = Player(32, 32, player_r, player_g, player_b);
@@ -42,22 +46,30 @@ Map::Map(float player_r, float player_g, float player_b, float zombie_r, float z
     zombies = new vector<Zombie>;
     srand((int)time(0));
     for (int i = 0; i < zombieNum; i++){
-        int x, y = 0;
+        int x = 0;int y = 0;
         while (playerLand[x][y] != emptyLand){
             x = (rand() % 64) + 1;
             y = (rand() % 64) + 1;
         }
-        (*zombies).push_back(Zombie(x, y, zombie_r, zombie_g, zombie_b));
+        Zombie temp = Zombie(x, y, zombie_r, zombie_g, zombie_b);
+        (*zombies).push_back(temp);
     }
 }
 
-void Map::update(){
+void Map::update(playerDirection newDirection){
+    (*player).setDirection(newDirection);
     (*player).update(playerLand);
+    
     for (int i = 0; i < zombieNum; i++){
         (*zombies)[i].update(playerLand);
     }
+    int temp_x = (*player).getX();
+    int temp_y = (*player).getY();
+    bool temp = (playerLand[temp_x][temp_y]==myLand);
     
-    bool temp = (playerLand[(*player).getX()][(*player).getY()]==myLand);
+    if ((*this).trailCollision()){
+        (*this).playerReset();
+    }
     
     if (temp&&(!trailing)){
         return;
@@ -67,12 +79,26 @@ void Map::update(){
         if (!trailing){
             trailing = true;
         }
-        playerTrail[(*player).getX()][(*player).getY()] = true;
+        if (playerTrail.size() != 0){
+            int last_x = playerTrail.back()[0];
+            int last_y = playerTrail.back()[1];
+            if (!((last_x==((*player).getX()))&&(last_y==((*player).getY())))){
+                cout<<"qwe"<<endl;
+                cout<<last_x<<" "<<last_y<<endl;
+                cout<<(*player).getX()<<" "<<(*player).getY()<<endl;
+                vector<int> temp_trail;
+                temp_trail.push_back((*player).getX());
+                temp_trail.push_back((*player).getY());
+                playerTrail.push_back(temp_trail);
+            }
+        } else {
+            vector<int> temp_trail;
+            temp_trail.push_back((*player).getX());
+            temp_trail.push_back((*player).getY());
+            playerTrail.push_back(temp_trail);
+        }
     }
     
-    if ((*this).trailCollision()){
-        (*this).playerReset();
-    }
     if((*this).percentLand()>=0.7){
         status = gameWin;
     } //////////////main should check the status after update
@@ -82,15 +108,17 @@ void Map::update(){
     for (int i =1; i<65; i++) {
         for (int j =1; j<65; j++) {
             totalLand[i][j] = playerLand[i][j];
-            if (playerTrail[i][j]){
-                totalLand[i][j] = trailFlag;
-            }
         }
+    }
+    for (auto i = playerTrail.begin(); i != playerTrail.end(); i++){
+        vector<int> temp = *i;
+        totalLand[temp[0]][temp[1]] = trailFlag;
     }
     totalLand[(*player).getX()][(*player).getY()] = playerFlag;
     for (int i=0; i<(*zombies).size(); i++){
         totalLand[(*zombies)[i].getX()][(*zombies)[i].getY()] = zombieFlag;
     }
+    
 }
 
 landFlag Map::getLandFlag(int x, int y){
@@ -117,13 +145,15 @@ gameStatus Map::getStatus() {
 }
 
 void Map::playerReset(){
+    cout<<"reset"<<endl;
+    for (auto i = playerTrail.begin(); i != playerTrail.end(); i++){
+        vector<int> temp = *i;
+        cout<<temp[0]<<" "<<temp[1]<<endl;
+    }
+    cout<<(*player).getX()<<" "<<(*player).getY()<<endl;
     (*player).setX(32);
     (*player).setY(32);
-    for (int i = 0; i<66; i++){
-        for (int j = 0; j<66; j++){
-            playerTrail[i][j] = false;
-        }
-    }
+    playerTrail.clear();
     int tempLife = (*player).getLife();
     (*player).setLife(tempLife-1);
     if ((tempLife-1)==0){
@@ -144,6 +174,23 @@ bool Map::trailCollision(){
     }
     //set player and zombie pos
     
+    for (std::vector<int>::size_type i=0;i!=playerTrail.size();i++){
+        vector<int> temp = playerTrail[i];
+        int trail_x = temp[0];
+        int trail_y = temp[1];
+        if ((trail_x==playerPos[0])&&(trail_y==playerPos[1])){
+            if (i != playerTrail.size()-1){
+                
+                return true;
+            }
+        }
+        for (int k = 0; k < zombieNum; k++){
+            if ((zombiesPos[k][0]==trail_x)&&(zombiesPos[k][1]==trail_y)){
+                return true;
+            }
+        }
+    }
+    /*
     for (int i = 0; i<66; i++){
         for (int j = 0; j<66; j++){
             if (playerTrail[i][j] == true){
@@ -157,7 +204,7 @@ bool Map::trailCollision(){
                 }
             }
         }
-    }
+    }*/
     return false;
 }
 
@@ -165,12 +212,16 @@ void Map::trailToLand(){
     bool tempLand[66][66];
     for (int i = 0; i<66; i++){
         for (int j = 0; j<66; j++){
-            if ((playerTrail[i][j])||(playerLand[i][j]==myLand)){
+            if (playerLand[i][j]==myLand){
                 tempLand[i][j] = true;
             } else {
                 tempLand[i][j] = false;
             }
         }
+    }
+    for (auto i = playerTrail.begin(); i != playerTrail.end(); i++){
+        vector<int> temp = *i;
+        tempLand[temp[0]][temp[1]] = true;
     }
     bool visitLand[66][66] = {false};
     (*this).floodFillLand(tempLand, visitLand, 0, 0);
@@ -209,26 +260,5 @@ void Map::floodFillLand(bool boolLand[66][66], bool visitLand[66][66], int x, in
     (*this).floodFillLand(boolLand, visitLand, x, y+1);
     (*this).floodFillLand(boolLand, visitLand, x-1, y+1);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
