@@ -177,23 +177,27 @@ void draw_text(){
     int percent = (*map).percentLand()*100;
     glBegin(GL_QUADS);
     glColor3f(0.3,0.3,0.3);
-    glVertex3f(44, 67, 0);
-    glVertex3f(58, 67, 0);
-    glVertex3f(58, 73, 0);
-    glVertex3f(44, 73, 0);
+    glVertex3f(44, 68, 0);
+    glVertex3f(58, 68, 0);
+    glVertex3f(58, 74, 0);
+    glVertex3f(44, 74, 0);
     glEnd();
     glBegin(GL_QUADS);
-    glColor3f(0.5,0.5,0.5);
-    glVertex3f(44.5, 67.5, 0);
-    glVertex3f(44.5+13*(*map).percentLand(), 67.5, 0);
-    glVertex3f(44.5+13*(*map).percentLand(), 72.5, 0);
-    glVertex3f(44.5, 72.5, 0);
+    if (currentStatus == gaming){
+        glColor3f(1,0,0);
+    } else if (currentStatus == gameWin){
+        glColor3f(0,1,0);
+    }
+    glVertex3f(44.5, 68.5, 0);
+    glVertex3f(44.5+13*(*map).percentLand(), 68.5, 0);
+    glVertex3f(44.5+13*(*map).percentLand(), 73.5, 0);
+    glVertex3f(44.5, 73.5, 0);
     glEnd();
-    draw_string(GLUT_BITMAP_HELVETICA_18, "PERCENTAGE", 44, 76, 0, 0.8, 0);
+    draw_string(GLUT_BITMAP_HELVETICA_18, "PERCENTAGE", 44, 76, 0, 1, 0);
     char str[2] = "";
     sprintf(str, "%d", percent);
     strcat(str,"%");
-    draw_string(GLUT_BITMAP_HELVETICA_18, str, 59.5, 69, 1, 1, 1);
+    draw_string(GLUT_BITMAP_HELVETICA_18, str, 59.5, 70, 1, 1, 1);
     
     if (showCredit){
         //CREDIT BACKGROUND
