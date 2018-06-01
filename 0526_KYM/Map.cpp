@@ -28,8 +28,8 @@ Map::Map(float player_r, float player_g, float player_b, float zombie_r, float z
         playerLand[i][65] = boundary;
     }
     
-    for (int j=31; j<34; j++){
-        for (int k=31; k<34; k++){
+    for (int j=28; j<37; j++){
+        for (int k=28; k<37; k++){
             playerLand[j][k] = myLand;
         }
     }
@@ -65,15 +65,17 @@ void Map::update(playerDirection newDirection){
     }
     int temp_x = (*player).getX();
     int temp_y = (*player).getY();
+    //cout<<"Player Coord: "<<temp_x<<" "<<temp_y<<endl;
     bool temp = (playerLand[temp_x][temp_y]==myLand);
     
     if ((*this).trailCollision()){
         (*this).playerReset();
     }
-    
+    /*
     if (temp&&(!trailing)){
         return;
-    } else if (temp&&trailing){
+    } else */
+    if (temp&&trailing){
         (*this).trailToLand();
     } else { // temp = false -> not myLand
         if (!trailing){
@@ -83,9 +85,10 @@ void Map::update(playerDirection newDirection){
             int last_x = playerTrail.back()[0];
             int last_y = playerTrail.back()[1];
             if (!((last_x==((*player).getX()))&&(last_y==((*player).getY())))){
-                cout<<"qwe"<<endl;
+                /*cout<<"qwe"<<endl;
                 cout<<last_x<<" "<<last_y<<endl;
                 cout<<(*player).getX()<<" "<<(*player).getY()<<endl;
+                 */
                 vector<int> temp_trail;
                 temp_trail.push_back((*player).getX());
                 temp_trail.push_back((*player).getY());
@@ -118,25 +121,24 @@ void Map::update(playerDirection newDirection){
     for (int i=0; i<(*zombies).size(); i++){
         totalLand[(*zombies)[i].getX()][(*zombies)[i].getY()] = zombieFlag;
     }
-    
 }
 
 landFlag Map::getLandFlag(int x, int y){
-    return totalLand[x][y];
+    return totalLand[x+1][y+1];
 }
 
 float Map::percentLand(){      //Calculate the percentage of my land
-	int playerLandNum;
-	float playerLandPercent;
+	int playerLandNum = 0;
+	float playerLandPercent = 0;
 
 	for (int i = 0; i<66; i++){
 		for (int j = 0; j<66; j++){
-            if (playerLand[i][j] == 2){
+            if (playerLand[i][j] == myLand){
                 ++playerLandNum;
             }
 		}
 	}
-	playerLandPercent = playerLandNum / 64 / 64;
+	playerLandPercent = playerLandNum/(64*64);
 	return playerLandPercent;
 }
 
@@ -145,12 +147,13 @@ gameStatus Map::getStatus() {
 }
 
 void Map::playerReset(){
-    cout<<"reset"<<endl;
+    /*<<"reset"<<endl;
     for (auto i = playerTrail.begin(); i != playerTrail.end(); i++){
         vector<int> temp = *i;
         cout<<temp[0]<<" "<<temp[1]<<endl;
     }
     cout<<(*player).getX()<<" "<<(*player).getY()<<endl;
+    */
     (*player).setX(32);
     (*player).setY(32);
     playerTrail.clear();
@@ -180,12 +183,12 @@ bool Map::trailCollision(){
         int trail_y = temp[1];
         if ((trail_x==playerPos[0])&&(trail_y==playerPos[1])){
             if (i != playerTrail.size()-1){
-                
                 return true;
             }
         }
         for (int k = 0; k < zombieNum; k++){
             if ((zombiesPos[k][0]==trail_x)&&(zombiesPos[k][1]==trail_y)){
+                //cout<<"zombie"<<endl;
                 return true;
             }
         }
@@ -232,10 +235,14 @@ void Map::trailToLand(){
             }
         }
     }
+    playerTrail.clear();
     for (int i = 0; i<(*zombies).size(); i++){
         if(playerLand[(*zombies)[i].getX()][(*zombies)[i].getY()]==myLand){
-            delete &(*zombies)[i];
+            //delete (*zombies)[i];
             (*zombies).erase((*zombies).begin()+i);
+            if (zombieNum>0){
+                zombieNum -= 1;
+            }
         }
     }//kill zombies inside myLand
 }
