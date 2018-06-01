@@ -10,14 +10,9 @@
 #define Zombie_h
 
 #include <stdio.h>
+#include "LandFlag.h"
 
 using namespace std;
-
-enum landFlag {
-    boundary = 0,
-    emptyLand = 1,
-    myLand = 2
-};
 
 class Zombie {
 public:

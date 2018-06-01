@@ -8,11 +8,7 @@
 
 #ifndef Player_h
 #define Player_h
-enum landFlag {
-    boundary = 0,
-    emptyLand = 1,
-    myLand = 2
-};
+#include "LandFlag.h"
 
 enum playerDirection {
     STOP = -1,

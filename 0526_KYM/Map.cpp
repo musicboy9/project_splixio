@@ -15,17 +15,16 @@
 Map::Map(float player_r, float player_g, float player_b, float zombie_r, float zombie_g, float zombie_b, int newZombieNum){
     
     for (int i=0; i<66; i++){
+        playerLand[0][i] = boundary;
+        playerLand[65][i] = boundary;
+        playerLand[i][0] = boundary;
+        playerLand[i][65] = boundary;
         for (int j=0; j<66; j++){
             playerLand[i][j] = emptyLand;
             playerTrail[i][j] = false;
         }
     }
-    for (int i=0; i<66; i++){
-        playerLand[0][i] = boundary;
-        playerLand[65][i] = boundary;
-        playerLand[i][0] = boundary;
-        playerLand[i][65] = boundary;
-    }
+    
     for (int j=31; j<34; j++){
         for (int k=31; k<34; k++){
             playerLand[j][k] = myLand;
@@ -77,6 +76,25 @@ void Map::update(){
     if((*this).percentLand()>=0.7){
         status = gameWin;
     } //////////////main should check the status after update
+    
+    //totalLand is made for main to check the landFlag
+    //playerLand - boundary, myLand, emptyLand / playerTrail / player / zombie
+    for (int i =1; i<65; i++) {
+        for (int j =1; j<65; j++) {
+            totalLand[i][j] = playerLand[i][j];
+            if (playerTrail[i][j]){
+                totalLand[i][j] = trailFlag;
+            }
+        }
+    }
+    totalLand[(*player).getX()][(*player).getY()] = playerFlag;
+    for (int i=0; i<(*zombies).size(); i++){
+        totalLand[(*zombies)[i].getX()][(*zombies)[i].getY()] = zombieFlag;
+    }
+}
+
+landFlag Map::getLandFlag(int x, int y){
+    return totalLand[x][y];
 }
 
 float Map::percentLand(){      //Calculate the percentage of my land

@@ -33,6 +33,7 @@
 		D752270320BFAF7A0095C695 /* Square.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Square.cpp; sourceTree = "<group>"; };
 		D752270620BFB0AE0095C695 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		D752270820BFB0B70095C695 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		D752270A20C05A7C0095C695 /* LandFlag.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LandFlag.h; sourceTree = "<group>"; };
 		D7EBE85420B93A8D0027F051 /* 0526_KYM */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 0526_KYM; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7EBE85720B93A8D0027F051 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		D7EBE85E20B93AA30027F051 /* Zombie.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Zombie.cpp; sourceTree = "<group>"; };
@@ -94,6 +95,7 @@
 				D7EBE86320B945440027F051 /* Player.h */,
 				D7EBE85E20B93AA30027F051 /* Zombie.cpp */,
 				D7EBE85F20B93AA30027F051 /* Zombie.h */,
+				D752270A20C05A7C0095C695 /* LandFlag.h */,
 			);
 			path = 0526_KYM;
 			sourceTree = "<group>";

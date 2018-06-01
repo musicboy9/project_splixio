@@ -11,10 +11,9 @@
 #include "OpenGL/OpenGL.h"
 #include "GLUT/GLUT.h"
 
-Square::Square(float x1, float x2, float y1, float y2, float r, float g, float b, float sz) {
+Square::Square(float x1, float x2, float y1, float y2, float r, float g, float b) {
     (*this).setPos(x1, x2, y1,y2);
     (*this).setColor(r,g,b);
-    size = sz;
 }
 
 void Square::setColor(float r, float g, float b){

@@ -24,6 +24,7 @@ public:
     Map(float player_r, float player_g, float player_b, float zombie_r, float zombie_g, float zombie_b, int zombieNum);
     void update();
 	float percentLand(); //Calculate the percentage of my land
+    landFlag getLandFlag(int x, int y);
     gameStatus getStatus();
 private:
     void playerReset();
@@ -31,6 +32,7 @@ private:
     void trailToLand();
     void floodFillLand(bool boolLand[66][66], bool visitLand[66][66], int x, int y);
     
+    landFlag totalLand[66][66];
     landFlag playerLand[66][66];
     bool playerTrail[66][66];
     int zombieNum;

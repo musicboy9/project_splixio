@@ -11,14 +11,13 @@
 
 class Square {
 public:
-    Square(float x1, float x2, float y1, float y2, float r, float g, float b, float sz);
+    Square(float x1, float x2, float y1, float y2, float r, float g, float b);
     void setColor(float r, float g, float b);
     void setPos(float x1, float x2, float y1, float y2);
     //float getX() const;
     //float getY() const;
     void draw() const;
 private:
-    float size;
     float color[3];
     float pos_x[2];
     float pos_y[2];
