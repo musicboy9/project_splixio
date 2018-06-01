@@ -22,10 +22,14 @@ enum gameStatus {
 class Map{
 public:
     Map(float player_r, float player_g, float player_b, float zombie_r, float zombie_g, float zombie_b, int zombieNum);
+    ~Map();
+    Map& operator=(const Map& tempMap);
+    Map(const Map& tempMap);
     void update(playerDirection newDirection);
 	float percentLand(); //Calculate the percentage of my land
     landFlag getLandFlag(int x, int y);
     gameStatus getStatus();
+    int getLife();
 private:
     void playerReset();
     bool trailCollision(); // true if player or zombie on trail, false if not

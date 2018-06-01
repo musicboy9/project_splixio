@@ -56,7 +56,60 @@ Map::Map(float player_r, float player_g, float player_b, float zombie_r, float z
     }
 }
 
+Map::~Map(){
+    if (player != nullptr){
+        delete player;
+    } if (zombies != nullptr){
+        delete zombies;
+    }
+}
+
+Map& Map::operator=(const Map& tempMap){
+    for (int i = 0; i<66; i++){
+        for (int j = 0; j<66; j++){
+            totalLand[i][j] = tempMap.totalLand[i][j];
+            playerLand[i][j] = tempMap.playerLand[i][j];
+        }
+    }
+    playerTrail = tempMap.playerTrail;
+    zombieNum = tempMap.zombieNum;
+    trailing = tempMap.trailing;
+    currentDir = tempMap.currentDir;
+    status = tempMap.status;
+    Player temp_player = Player(*tempMap.player);
+    player = &temp_player;
+    vector<Zombie> temp_zombies;
+    for (auto i = (*(tempMap.zombies)).begin(); i != (*(tempMap.zombies)).end(); i++){
+        temp_zombies.push_back(Zombie(*i));
+    }
+    zombies = &temp_zombies;
+    
+    return (*this);
+}
+
+Map::Map(const Map& tempMap){
+    for (int i = 0; i<66; i++){
+        for (int j = 0; j<66; j++){
+            totalLand[i][j] = tempMap.totalLand[i][j];
+            playerLand[i][j] = tempMap.playerLand[i][j];
+        }
+    }
+    playerTrail = tempMap.playerTrail;
+    zombieNum = tempMap.zombieNum;
+    trailing = tempMap.trailing;
+    currentDir = tempMap.currentDir;
+    status = tempMap.status;
+    Player temp_player = Player(*tempMap.player);
+    player = &temp_player;
+    vector<Zombie> temp_zombies;
+    for (auto i = (*(tempMap.zombies)).begin(); i != (*(tempMap.zombies)).end(); i++){
+        temp_zombies.push_back(Zombie(*i));
+    }
+    zombies = &temp_zombies;
+}
+
 void Map::update(playerDirection newDirection){
+    
     (*player).setDirection(newDirection);
     (*player).update(playerLand);
     
@@ -104,7 +157,8 @@ void Map::update(playerDirection newDirection){
     
     if((*this).percentLand()>=0.7){
         status = gameWin;
-    } //////////////main should check the status after update
+        cout<<"gameWin"<<endl;
+    }
     
     //totalLand is made for main to check the landFlag
     //playerLand - boundary, myLand, emptyLand / playerTrail / player / zombie
@@ -123,12 +177,8 @@ void Map::update(playerDirection newDirection){
     }
 }
 
-landFlag Map::getLandFlag(int x, int y){
-    return totalLand[x+1][y+1];
-}
-
 float Map::percentLand(){      //Calculate the percentage of my land
-	int playerLandNum = 0;
+	float playerLandNum = 0;
 	float playerLandPercent = 0;
 
 	for (int i = 0; i<66; i++){
@@ -139,11 +189,18 @@ float Map::percentLand(){      //Calculate the percentage of my land
 		}
 	}
 	playerLandPercent = playerLandNum/(64*64);
+    cout<<playerLandPercent<<endl;
 	return playerLandPercent;
 }
 
+landFlag Map::getLandFlag(int x, int y){
+    return totalLand[x+1][y+1];
+}
 gameStatus Map::getStatus() {
     return status;
+}
+int Map::getLife(){
+    return (*player).getLife();
 }
 
 void Map::playerReset(){
